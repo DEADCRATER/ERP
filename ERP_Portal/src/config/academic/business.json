@@ -1,0 +1,30 @@
+{
+  "department": "Business Administration",
+  "courses": [
+    {
+      "name": "Bachelor of Business Administration (BBA)",
+      "type": "UG",
+      "duration": "3 years"
+    },
+    {
+      "name": "Bachelor of Commerce (B.Com)",
+      "type": "UG",
+      "duration": "3 years"
+    },
+    {
+      "name": "Master of Business Administration (MBA)",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "MBA in Finance",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Post Graduate Diploma in Management",
+      "type": "Diploma",
+      "duration": "1 year"
+    }
+  ]
+}

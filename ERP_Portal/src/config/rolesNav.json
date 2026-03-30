@@ -1,0 +1,100 @@
+{
+  "SUPER_ADMIN": [
+    {
+      "id": "sa_dashboard",
+      "label": "Dashboard",
+      "path": "/super-admin/dashboard",
+      "icon": "DashboardIcon"
+    },
+    {
+      "id": "sa_manage_users",
+      "label": "Manage All Users",
+      "path": "/super-admin/users",
+      "icon": "UsersIcon"
+    },
+    {
+      "id": "sa_system_settings",
+      "label": "System Settings",
+      "path": "/super-admin/settings",
+      "icon": "SettingsIcon"
+    }
+  ],
+  "PRINCIPAL": [
+    {
+      "id": "p_dashboard",
+      "label": "Dashboard",
+      "path": "/principal/dashboard",
+      "icon": "DashboardIcon"
+    },
+    {
+      "id": "p_students",
+      "label": "All Students Details",
+      "path": "/principal/students",
+      "icon": "AcademicCapIcon"
+    },
+    {
+      "id": "p_staff",
+      "label": "Staff Directory",
+      "path": "/principal/staff",
+      "icon": "UserGroupIcon"
+    },
+    {
+      "id": "p_reports",
+      "label": "Academic Reports",
+      "path": "/principal/reports",
+      "icon": "DocumentReportIcon"
+    }
+  ],
+  "ACCOUNTANT": [
+    {
+      "id": "acc_dashboard",
+      "label": "Account Dashboard",
+      "path": "/accountant/dashboard",
+      "icon": "DashboardIcon"
+    },
+    {
+      "id": "acc_fees",
+      "label": "Fee Collection",
+      "path": "/accountant/fees",
+      "icon": "CurrencyRupeeIcon"
+    },
+    {
+      "id": "acc_payroll",
+      "label": "Staff Payroll",
+      "path": "/accountant/payroll",
+      "icon": "CalculatorIcon"
+    },
+    {
+      "id": "acc_financial_reports",
+      "label": "Financial Reports",
+      "path": "/accountant/reports",
+      "icon": "ChartBarIcon"
+    }
+  ],
+  "STUDENT": [
+    {
+      "id": "stu_dashboard",
+      "label": "Student Dashboard",
+      "path": "/student/dashboard",
+      "icon": "DashboardIcon"
+    },
+    {
+      "id": "stu_profile",
+      "label": "Update Registration / Profile",
+      "path": "/student/profile",
+      "icon": "IdentificationIcon"
+    },
+    {
+      "id": "stu_academics",
+      "label": "My Academics",
+      "path": "/student/academics",
+      "icon": "BookOpenIcon"
+    },
+    {
+      "id": "stu_fees",
+      "label": "Fee Details",
+      "path": "/student/fees",
+      "icon": "ReceiptRefundIcon"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+[
+  { "label": "sidebar.dashboard", "path": "/student/dashboard", "icon": "dashboard" },
+  { "label": "sidebar.profile", "path": "/student/profile", "icon": "user" },
+  { "label": "sidebar.updateDetails", "path": "/student/settings", "icon": "pencil" },
+  { "label": "sidebar.fees", "path": "/student/fees", "icon": "fees" }
+]

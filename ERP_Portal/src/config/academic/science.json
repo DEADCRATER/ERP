@@ -1,0 +1,30 @@
+{
+  "department": "Faculty of Fundamental Sciences",
+  "courses": [
+    {
+      "name": "Bachelor of Science (B.Sc.) Physics",
+      "type": "UG",
+      "duration": "3 years"
+    },
+    {
+      "name": "Bachelor of Science (B.Sc.) Mathematics",
+      "type": "UG",
+      "duration": "3 years"
+    },
+    {
+      "name": "Master of Science (M.Sc.) Chemistry",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Master of Science (M.Sc.) Applied Mathematics",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Post Graduate Diploma in Analytical Science",
+      "type": "Diploma",
+      "duration": "1 year"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "department": "Electronics and Communication Engineering",
+  "courses": [
+    {
+      "name": "B.Tech ECE",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "B.Tech VLSI Design",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "M.Tech Embedded Systems",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "M.Tech Communication Systems",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Diploma in Electronics",
+      "type": "Diploma",
+      "duration": "3 years"
+    }
+  ]
+}

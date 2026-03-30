@@ -1,0 +1,25 @@
+{
+  "department": "Pharmacy",
+  "courses": [
+    {
+      "name": "B.Pharm",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "M.Pharm",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "D.Pharm",
+      "type": "Diploma",
+      "duration": "2 years"
+    },
+    {
+      "name": "Pharm.D",
+      "type": "Doctorate",
+      "duration": "6 years"
+    }
+  ]
+}

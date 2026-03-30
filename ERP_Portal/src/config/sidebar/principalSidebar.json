@@ -1,0 +1,8 @@
+[
+  { "label": "sidebar.dashboard", "path": "/principal/dashboard", "icon": "dashboard" },
+  { "label": "sidebar.manageStudents", "path": "/principal/students", "icon": "users" },
+  { "label": "sidebar.manageExaminationForms", "path": "/principal/examination-forms", "icon": "clipboardList" },
+  { "label": "sidebar.manageDeliveredLectures", "path": "/principal/delivered-lectures", "icon": "academicCap" },
+  { "label": "sidebar.manageEmployees", "path": "/principal/employees", "icon": "userGroup" },
+  { "label": "sidebar.internalMarks", "path": "/principal/internal-marks", "icon": "documentReport" }
+]

@@ -1,0 +1,6 @@
+[
+  { "label": "sidebar.dashboard", "path": "/super-admin/dashboard", "icon": "dashboard" },
+  { "label": "sidebar.managePrincipals", "path": "/super-admin/principals", "icon": "users" },
+  { "label": "sidebar.manageStudents", "path": "/super-admin/students", "icon": "academicCap" },
+  { "label": "sidebar.settings", "path": "/super-admin/settings", "icon": "cog" }
+]

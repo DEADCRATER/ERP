@@ -1,0 +1,30 @@
+{
+  "department": "Civil Engineering",
+  "courses": [
+    {
+      "name": "B.Tech Civil Engineering",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "B.Tech Environmental Engineering",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "M.Tech Structural Engineering",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "M.Tech Construction Management",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Diploma in Civil Engineering",
+      "type": "Diploma",
+      "duration": "3 years"
+    }
+  ]
+}

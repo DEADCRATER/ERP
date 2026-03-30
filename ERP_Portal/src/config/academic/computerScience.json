@@ -1,0 +1,35 @@
+{
+  "department": "Computer Science and Engineering",
+  "courses": [
+    {
+      "name": "B.Tech Computer Science",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "B.Tech Information Technology",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "M.Tech Data Science",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "M.Tech Artificial Intelligence",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Diploma in Software Engineering",
+      "type": "Diploma",
+      "duration": "3 years"
+    },
+    {
+      "name": "Ph.D. in Computer Science",
+      "type": "PG",
+      "duration": "3-5 years"
+    }
+  ]
+}

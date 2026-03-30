@@ -1,0 +1,30 @@
+{
+  "department": "Mechanical Engineering",
+  "courses": [
+    {
+      "name": "B.Tech Mechanical Engineering",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "B.Tech Automobile Engineering",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "M.Tech Thermal Engineering",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "M.Tech Manufacturing Systems",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Diploma in Mechanical Engineering",
+      "type": "Diploma",
+      "duration": "3 years"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "department": "Faculty of Arts and Humanities",
+  "courses": [
+    {
+      "name": "Bachelor of Arts (B.A.) in English",
+      "type": "UG",
+      "duration": "3 years"
+    },
+    {
+      "name": "Bachelor of Arts (B.A.) in History",
+      "type": "UG",
+      "duration": "3 years"
+    },
+    {
+      "name": "Master of Arts (M.A.) in Economics",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Master of Arts (M.A.) in Political Science",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Diploma in Fine Arts",
+      "type": "Diploma",
+      "duration": "2 years"
+    }
+  ]
+}

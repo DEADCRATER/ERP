@@ -1,0 +1,30 @@
+{
+  "department": "Electrical Engineering",
+  "courses": [
+    {
+      "name": "B.Tech Electrical & Electronics",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "B.Tech Power Systems",
+      "type": "UG",
+      "duration": "4 years"
+    },
+    {
+      "name": "M.Tech Power Electronics",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "M.Tech Renewable Energy",
+      "type": "PG",
+      "duration": "2 years"
+    },
+    {
+      "name": "Diploma in Electrical Engineering",
+      "type": "Diploma",
+      "duration": "3 years"
+    }
+  ]
+}
