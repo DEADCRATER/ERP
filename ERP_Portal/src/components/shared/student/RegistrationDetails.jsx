@@ -6,9 +6,7 @@ const RegistrationDetails = ({ student, showSlipOptions, setShowSlipOptions, onV
   const { user: currentUser } = useAuth();
   const {  applicationNumber , enrollmentNumber ,submissionDate
 } = student?.profile || {};
-  const {collegeName,collegeCode } = student?.college || {};
-  console.log("student:", student?.profile);
-  
+  const {collegeName,collegeCode } = student?.college || {};  
   
 
   return (

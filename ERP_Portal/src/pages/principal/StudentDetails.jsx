@@ -7,9 +7,11 @@ import AddressDetails from "../../components/shared/student/AddressDetails";
 import AcademicEnclosures from "../../components/shared/student/AcademicEnclosures";
 import OtherDetails from "../../components/shared/student/OtherDetails";
 import ReviewActionModal from "../../components/principal/ReviewActionModal";
+import RegistrationSlip from "./RegistrationSlip";
 import ReviewHistory from "../../components/principal/ReviewHistory";
 import api from "../../lib/axios";
 import { toast } from "react-hot-toast";
+import { Button } from "../../components/ui/Button";
 
 const StudentDetails = () => {
   const { id } = useParams();
@@ -17,8 +19,9 @@ const StudentDetails = () => {
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
   const isPrincipal = currentUser?.role === 'PRINCIPAL';
+  const [viewingSlip, setViewingSlip] = useState(false); 
   
-  const [student, setStudent] = useState(null);
+  const [student, setStudent] = useState(null);// { type: 'registration' | 'admission', data: {} }
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -28,6 +31,12 @@ const StudentDetails = () => {
   const [activeTab, setActiveTab] = useState('personal'); // 'personal' | 'enclosures' | 'status'
   const [nextStudent, setNextStudent] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+
+  const viewSlip = (type) => {
+    navigate(`/principal/registration-slip/${id}/${type}`);
+    setViewingSlip({ type });
+  };
 
   const fetchStudentRecords = async (showToast = false) => {
     if (showToast) setIsRefreshing(true);
@@ -239,6 +248,9 @@ const StudentDetails = () => {
         {activeTab === 'personal' && (
           <div className="animate-in fade-in duration-300">
             <div className="text-center mb-8 pb-6 border-b-2 border-gray-100">
+              <Button onClick={() => viewSlip('registration')} className="absolute right-4 top-4 bg-blue-600 text-white px-3 py-1.5 rounded font-bold text-[10px] shadow-sm hover:bg-blue-700 transition-all print:hidden">
+                View Registration Slip
+              </Button>
               <h2 className="text-xl font-bold text-gray-900 tracking-wide uppercase">Bihar University of Health Sciences, Patna</h2>
               <p className="text-gray-600 mt-2 font-bold border-t border-b border-gray-100 inline-block px-8 py-1">Student Registration Details</p>
             </div>
