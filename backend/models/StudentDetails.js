@@ -7,10 +7,10 @@ const studentDetailsSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  enrollmentNumber: { 
-    type: String, 
-    unique: true, 
-    sparse: true 
+  enrollmentNumber: {
+    type: String,
+    unique: true,
+    sparse: true
   },
   applicationNumber: {
     type: String,
@@ -81,10 +81,11 @@ const studentDetailsSchema = new mongoose.Schema({
   transactionDate: { type: String },
   paymentId: { type: String },
   transactionId: { type: String },
-  transactionStatus: { type: String,
+  transactionStatus: {
+    type: String,
     enum: ['PENDING', 'SUCCESS', 'FAILED'],
     default: 'PENDING'
-   },
+  },
 
 
   // State Tracking

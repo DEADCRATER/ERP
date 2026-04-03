@@ -37,7 +37,7 @@ const Login = () => {
   if (role === 'SUPER_ADMIN') {
     testEmail = 'test@erp.com';
   } else if (role === 'PRINCIPAL') {
-    testEmail = 'principal@erp.com';
+    testEmail = 'bhavesh@erp.com';
   } else if (role === 'STUDENT') {
     testEmail = 'studentverified@erp.com';
   }
