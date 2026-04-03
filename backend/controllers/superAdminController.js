@@ -7,7 +7,7 @@ const SystemConfig = require('../models/SystemConfig');
 const sendEmail = require('../utils/sendEmail');
 
 const getPrincipals = asyncHandler(async (req, res) => {
-  const principals = await User.find({ role: 'PRINCIPAL' }).select('-password');
+  const principals = await College.find().select('collegeName collegeCode collegeEmail isActive');
   res.json({ count: principals.length, data: principals });
 });
 

@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import AddPrincipalModal from '../../components/modals/AddPrincipalModal';
+import api from '../../lib/axios';
 
 const ManagePrincipals = () => {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [principals, setPrincipals] = useState([]);
 
-  const dummyPrincipals = [
-    { id: 1, name: "Alice Johnson", email: "alice.j@erp.com", status: "Active" },
-    { id: 2, name: "Robert Smith", email: "robert.s@erp.com", status: "Active" },
-    { id: 3, name: "Maria Garcia", email: "maria.g@erp.com", status: "Inactive" },
-  ];
+  const fetchPrincipals = async () => {
+    try {
+      const response = await api.get('super-admin/principals');
+      setPrincipals(response.data.data);
+      console.log(response.data.data)
+    } catch (error) {
+      console.error('Error fetching principals:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPrincipals();
+  }, []);
+
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
@@ -36,13 +47,13 @@ const ManagePrincipals = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 bg-white">
-              {dummyPrincipals.map((principal) => (
-                <tr key={principal.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{principal.name}</td>
-                  <td className="px-6 py-4 text-gray-600">{principal.email}</td>
+              {principals.map((p) => (
+                <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="px-6 py-4 font-medium text-gray-900">{p.collegeName}</td>
+                  <td className="px-6 py-4 text-gray-600">{p.collegeEmail}</td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${principal.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                      {t(`superAdmin.${principal.status.lowerCase}`, principal.status)}
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${p.isActive === true ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                      {String(p.isActive)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right space-x-3">
