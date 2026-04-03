@@ -1,14 +1,36 @@
 const asyncHandler = require('express-async-handler');
 const StudentDetails = require('../models/StudentDetails');
-const Branch = require('../models/Branch');
 const College = require('../models/College');
 const Department = require('../models/Department');
 const User = require('../models/User');
 const sendEmail = require('../utils/sendEmail');
+const principalService = require('../services/principalService');
+const ApplicationAudit = require('../models/ApplicationAudit');
 
+// 
 const getAllStudents = asyncHandler(async (req, res) => {
-  const students = await StudentDetails.find().populate('user', 'name email role');
-  
+  const { course } = req.params;
+
+  const courseDoc = await Department.findOne({
+    name: course,
+    collegeId: req.user.collegeId
+  });
+
+  console.log('Resolved Course Document:', courseDoc._id.toString());
+
+  const students = await StudentDetails.find({
+  Course : courseDoc._id.toString()
+})
+
+    .select('applicationNumber category name fatherName mobile submissionDate academicStatus Course user')
+    .populate('user', 'name email role')
+    .populate({
+      path: 'Course',
+      select: 'name'
+    });
+
+  console.log('Fetched Students:', students);
+
   res.json({ count: students.length, data: students });
 });
 
@@ -52,54 +74,26 @@ const createBranch = asyncHandler(async (req, res) => {
 
 const reviewStudentApplication = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { status, message } = req.body; // status: 'APPROVED', 'REJECTED', 'NEEDS_UPDATE'
+    const { status, message } = req.body;
 
-    if (!['APPROVED', 'REJECTED', 'NEEDS_UPDATE'].includes(status)) {
-        res.status(400);
-        throw new Error('Invalid status provided');
-    }
+    const updatedStudent = await principalService.processReview(id, status, message, req.user._id);
 
-    const studentOpt = await StudentDetails.findById(id).populate('user', 'name email isVerified');
-    
-    if (!studentOpt) {
-        res.status(404);
-        throw new Error('Student application not found');
-    }
+    res.json({ 
+        message: `Application ${status.toLowerCase()} successfully and notification sent.`, 
+        data: updatedStudent 
+    });
+});
 
-    studentOpt.applicationStatus = status;
+const updateStudentData = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
 
-    let emailSubject = '';
-    let emailMessage = '';
+    const updatedStudent = await principalService.updateStudentData(id, updateData, req.user._id);
 
-    if (status === 'APPROVED') {
-        studentOpt.user.isVerified = true;
-        await studentOpt.user.save();
-        emailSubject = 'Application Approved';
-        emailMessage = `Dear ${studentOpt.user.name},\n\nYour application has been approved by the principal. Welcome!`;
-    } else if (status === 'REJECTED') {
-        emailSubject = 'Application Rejected';
-        emailMessage = `Dear ${studentOpt.user.name},\n\nWe regret to inform you that your application has been rejected.\nReason: ${message || 'Not specified'}`;
-    } else if (status === 'NEEDS_UPDATE') {
-        studentOpt.reviewMessage = message; // Store message in DB
-        emailSubject = 'Application Needs Update';
-        emailMessage = `Dear ${studentOpt.user.name},\n\nYour application requires some updates before it can be processed.\nPrincipal's Note: ${message || 'Please review your application and provide the necessary details.'}`;
-    }
-
-    await studentOpt.save();
-
-    // Send the email
-    try {
-        await sendEmail({
-            email: studentOpt.user.email,
-            subject: emailSubject,
-            message: emailMessage,
-        });
-    } catch (error) {
-        console.error('Email sending failed:', error);
-        // We still return success but maybe log the email error
-    }
-
-    res.json({ message: `Application ${status.toLowerCase()} successfully and email sent.`, data: studentOpt });
+    res.json({ 
+        message: 'Student application updated successfully', 
+        data: updatedStudent 
+    });
 });
 
 const printStudentData = asyncHandler(async (req, res) => {
@@ -185,6 +179,19 @@ const getCollegeStats = asyncHandler(async (req, res) => {
         }
     });
 });
+
+const getStudentHistory = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const history = await ApplicationAudit.find({ studentId: id })
+        .populate('performedBy', 'name role')
+        .sort({ createdAt: -1 });
+
+    res.json({
+        message: 'Application history fetched successfully',
+        data: history
+    });
+});
 const createDepartment = asyncHandler(async (req, res) => {
   const { name, totalSeats } = req.body;
 
@@ -217,4 +224,4 @@ const createDepartment = asyncHandler(async (req, res) => {
   res.status(201).json({ message: 'Department created successfully', data: department });
 });
 
-module.exports = { getAllStudents, createBranch, createDepartment, reviewStudentApplication, printStudentData, getDepartmentsAndBranches, getCollegeStats, getDepartments };
+module.exports = { getAllStudents, createBranch, createDepartment, reviewStudentApplication, updateStudentData, printStudentData, getDepartmentsAndBranches, getCollegeStats, getDepartments, getStudentHistory };

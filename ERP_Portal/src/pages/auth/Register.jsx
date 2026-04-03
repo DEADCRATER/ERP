@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../lib/axios';
@@ -8,6 +8,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
+  const [college, setCollege] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,6 +20,19 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const fetchColleges = async () => {
+    try {
+      const response = await api.get('student/colleges');
+      setCollege(response.data.data);
+    } catch (err) {
+      setError('Failed to fetch colleges');
+    }
+  };
+
+  useEffect(() => {
+    fetchColleges();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -129,7 +143,14 @@ const Register = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">College Code</label>
-                <input name="collegeCode" type="text" value={formData.collegeCode} onChange={handleChange} required className={inputTheme} placeholder="e.g., INST101" />
+                <select name="collegeCode" value={formData.collegeCode} onChange={handleChange} required className={inputTheme}>
+                  <option value="">Select a college</option>
+                   <div className='flex items-center justify-center'>
+                  {college.map((c) => (
+                      <option key={c._id} value={c.collegeCode}>{c.collegeName} ({c.collegeCode})</option>
+                  ))}
+                   </div>
+                </select>
               </div>
               <button type="submit" disabled={loading} className={btnTheme}>
                 {loading ? 'Sending OTP...' : 'Send OTP'}

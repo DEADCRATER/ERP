@@ -5,7 +5,21 @@ import educationBoards from '../../../data/educationboards';
 const AcademicDetails = ({ data, setData, onNext, onBack }) => {
   const inputStyle = "no-spinner mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 sm:text-sm shadow-sm transition";
   const labelStyle = "block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1";
+  const [selectCourse, setSelectedCourse] = useState('');
   
+  const FetchCourse = async () => {
+    try {
+      const response = await fetch('/student/collegesbranch');
+      const result = await response.json();
+      setSelectedCourse(result.data);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  }
+  useEffect(() => {
+    // Fetch courses/branches from backend
+    FetchCourse();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

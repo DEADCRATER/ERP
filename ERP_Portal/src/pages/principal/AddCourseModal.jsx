@@ -20,12 +20,7 @@ const AddCourseModal = ({ onClose, onSuccess, departments }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      await api.post("/principal/branches", formData, {
-        headers: {
-          Authorization: `Bearer ${user.accessToken}`,
-        },
-      });
+      await api.post("/principal/branches", formData);
     } catch (err) {
       console.error("Error adding course:", err);
       alert(t("principal.courseAddedError", "Failed to add course. Please try again."));

@@ -13,9 +13,7 @@ const AddCourse = () => {
     setLoading(true);
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      const res = await api.get(`/principal/college/${user?._id}/departments`, {
-        headers: { Authorization: `Bearer ${user?.accessToken}` },
-      });
+      const res = await api.get(`/principal/college/${user?._id}/departments`);
       setDepartments(res.data.data || []);
     } catch (err) {
       console.error("Error fetching departments:", err);

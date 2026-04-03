@@ -10,7 +10,6 @@ const AddDepartmentSidebar = ({ isOpen, onClose, onCreated }) => {
   const [departments, setDepartments] = useState([]);
   const [loadingDepts, setLoadingDepts] = useState(false);
 
-  const token = () => JSON.parse(localStorage.getItem('user') || '{}')?.accessToken;
 
   // Fetch existing departments whenever the sidebar opens
   useEffect(() => {
@@ -19,9 +18,7 @@ const AddDepartmentSidebar = ({ isOpen, onClose, onCreated }) => {
       setLoadingDepts(true);
       try {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const res = await api.get(`/principal/college/${user._id}/departments`, {
-          headers: { Authorization: `Bearer ${token()}` },
-        });
+        const res = await api.get(`/principal/college/${user._id}/departments`);
         setDepartments(res.data?.data || []);
       } catch {
         setDepartments([]);
@@ -48,8 +45,7 @@ const AddDepartmentSidebar = ({ isOpen, onClose, onCreated }) => {
     try {
       const res = await api.post(
         '/principal/departments',
-        { name: name.trim(), totalSeats: totalSeats || 0 },
-        { headers: { Authorization: `Bearer ${token()}` } }
+        { name: name.trim(), totalSeats: totalSeats || 0 }
       );
       setSuccess('Department created successfully!');
       setDepartments((prev) => [...prev, res.data.data]);

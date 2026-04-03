@@ -2,13 +2,15 @@ const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
-const { getAllStudents, reviewStudentApplication, createBranch, printStudentData, getDepartmentsAndBranches, getCollegeStats, getDepartments, createDepartment } = require('../controllers/principalController');
+const { getAllStudents, reviewStudentApplication, updateStudentData, getStudentHistory, createBranch, printStudentData, getDepartmentsAndBranches, getCollegeStats, getDepartments, createDepartment } = require('../controllers/principalController');
 
 router.use(protect);
 router.use(authorizeRoles('PRINCIPAL', 'SUPER_ADMIN'));
 
-router.get('/students', getAllStudents);
+router.get('/students/:course', getAllStudents);
 router.put('/students/:id/review', reviewStudentApplication);
+router.put('/students/:id/update', updateStudentData);
+router.get('/students/:id/history', getStudentHistory);
 router.get('/students/:id/print', printStudentData);
 
 

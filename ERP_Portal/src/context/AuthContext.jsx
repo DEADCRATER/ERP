@@ -24,6 +24,9 @@ export const AuthProvider = ({ children }) => {
       const res = await api.post('/auth/login', userloginData);   
       setUser(res.data);
       localStorage.setItem('user', JSON.stringify(res.data));
+      if (res.data.accessToken) {
+        localStorage.setItem('token', res.data.accessToken);
+      }
     } catch (error) {
       console.error('Login failed:', error);
     }   
@@ -32,17 +35,13 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
       try {
-        await api.post('/auth/logout', {}, {
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-          
-        });
+        await api.post('/auth/logout', {});
       } catch (error) {
         console.error('Logout failed:', error);
       }
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   if (loading) {

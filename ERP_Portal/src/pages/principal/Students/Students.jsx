@@ -87,27 +87,8 @@ const Students = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        // const res = await api.get("/principal/students");
-        const res = {
-          data: [
-            {
-              user: {
-                name: "John Doe",
-              },
-              rollNo: "1",
-              course: "Computer Science",
-              status: "Active",
-            },
-            {
-              user: {
-                name: "Jane Doe",
-              },
-              rollNo: "2",
-              course: "Mechanical Engineering",
-              status: "Active",
-            },
-          ],
-        };
+        const res = await api.get("/principal/students");
+        
         setStudents(res.data);
         const uniqueCourses = [...new Set(res.data.map((s) => s.course))];
         setCourses(uniqueCourses);

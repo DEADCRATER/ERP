@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const { checkMaintenanceMode } = require('./middleware/maintenanceMiddleware');
 
 // Connect Database
 connectDB();
@@ -19,6 +20,9 @@ app.use(cors({
   origin: process.env.ALLOWED_ORIGIN || 'http://localhost:5173',
   credentials: true
 }));
+
+// Apply Maintenance Mode Middleware
+app.use(checkMaintenanceMode);
 
 // API Routes
 app.use('/api/auth', require('./routes/authRoutes'));

@@ -19,10 +19,7 @@ const RegistrationSlip = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const res = await api.get(`/student/application/${id}`, {
-          headers: { Authorization: `Bearer ${user?.accessToken}` },
-        });
+        const res = await api.get(`/student/studentData/${id}`);
         setStudent(res.data.profile);
         setCollege(res.data.college);
       } catch (err) {

@@ -1,13 +1,16 @@
 const asyncHandler = require('express-async-handler');
 const StudentDetails = require('../models/StudentDetails');
 const College = require('../models/College');
+const User = require('../models/User');
+const Department = require('../models/Department');
 
 const getMyApplication = asyncHandler(async (req, res) => {
   const applicationId = req.params.id;
-  const profile = await StudentDetails.findOne({ _id: applicationId })
-    .populate('user', 'name email phone')
-    .populate('departmentId', 'name');
-  
+  console.log(applicationId);
+  const profile = await StudentDetails.findOne({ user: applicationId })
+    
+    // .populate('departmentId', 'name');
+  console.log(profile);
   if (!profile) {
     res.status(404);
     throw new Error('Student profile not found');
@@ -18,8 +21,39 @@ const getMyApplication = asyncHandler(async (req, res) => {
     college = await College.findById(req.user.collegeId).select('collegeName collegeCode collegeEmail collegePhone collegeAddress');
   }
 
+  res.json({ profile , college });
+});
+
+const printStudentData = asyncHandler(async (req, res) => {
+  const applicationId = req.params.id;
+
+  // const students = await StudentDetails.find()
+  //   .select('applicationNumber category name fatherName mobile submissionDate academicStatus Course user')
+  //   .populate('user', 'name email role')
+  //   .populate({
+  //     path: 'Course',
+      // select: 'name'
+    // });
+  const profile = await StudentDetails.findOne({ _id: applicationId })
+    .populate('user', 'name email phone')
+    .populate({
+      path: 'Course',
+      select: 'name'
+    });
+  
+  if (!profile) {
+    res.status(404);
+    throw new Error('Student profile not found');
+  } 
+
+  let college = null;
+  if (req.user.collegeId) {
+    college = await College.findById(req.user.collegeId).select('collegeName collegeCode');
+  }
+
   res.json({ profile, college });
 });
+  
 
 const getMyCollegeDepartments = asyncHandler(async (req, res) => {
   const Department = require('../models/Department');
@@ -139,6 +173,15 @@ const submitApplication = asyncHandler(async (req, res) => {
   res.json({ message: 'Application submitted', data: profile });
 });
 
+const getColleges = asyncHandler(async (req, res) => {
+  const colleges = await College.find().select('collegeCode collegeName');
+  res.json({ data: colleges });
+});
+const getCollegesbranch = asyncHandler(async (req, res) => {
+  const branches = await Department.find().select('name');
+  res.json({ data: branches });
+});
+
 module.exports = { 
   getMyApplication, 
   getMyCollegeDepartments, 
@@ -146,5 +189,8 @@ module.exports = {
   saveStep2, 
   saveStep3, 
   saveStep4, 
-  submitApplication 
+  submitApplication ,
+  printStudentData,
+  getColleges,
+  getCollegesbranch
 };

@@ -17,9 +17,7 @@ const studentDetailsSchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
-  course: { type: String },
   semester: { type: Number },
-  departmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Department' },
 
   // Personal Details (Step 1)
   name: { type: String },

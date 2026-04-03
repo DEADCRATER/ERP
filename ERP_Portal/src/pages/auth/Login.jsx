@@ -10,7 +10,7 @@ const Login = () => {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('SUPER_ADMIN');
+  const [role, setRole] = useState('PRINCIPAL');
 
   const executeLogin = async (loginEmail, loginPassword, loginRole) => {
     try {
@@ -37,9 +37,9 @@ const Login = () => {
   if (role === 'SUPER_ADMIN') {
     testEmail = 'test@erp.com';
   } else if (role === 'PRINCIPAL') {
-    testEmail = 'bhavesh@erp.com';
+    testEmail = 'principal@erp.com';
   } else if (role === 'STUDENT') {
-    testEmail = 'student@erp.com';
+    testEmail = 'studentverified@erp.com';
   }
 
   setEmail(testEmail);
@@ -94,7 +94,6 @@ const Login = () => {
                 {t('role', 'Select Role')}
               </label>
               <select id="role" value={role} onChange={(e) => setRole(e.target.value)} className="mt-1 block w-full rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm">
-                <option value="SUPER_ADMIN">Super Admin</option>
                 <option value="PRINCIPAL">Principal</option>
                 <option value="STUDENT">Student</option>
               </select>

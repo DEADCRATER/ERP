@@ -16,28 +16,21 @@ const AddPrincipalModal = ({ isOpen, onClose }) => {
   e.preventDefault();
 
   try {
-    const collegeRes = await api.post(
-      '/super-admin/college-admins',
-      {
-        collegeName: formData.collegeName,
-        collegeCode: formData.collegeCode,
-        collegeEmail: formData.collegeEmail,
-        collegePhone: formData.collegePhone,
-        collegeAddress: formData.collegeAddress,
-        collegeWebsite: formData.collegeWebsite,
-        adminName: formData.adminName,
-        adminEmail: formData.adminEmail,
-        adminPhone: formData.adminPhone,
-        adminRole: formData.adminRole,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${
-            localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).accessToken : ''
-          }`,
-        },
-      }
-    );
+      const collegeRes = await api.post(
+        '/super-admin/college-admins',
+        {
+          collegeName: formData.collegeName,
+          collegeCode: formData.collegeCode,
+          collegeEmail: formData.collegeEmail,
+          collegePhone: formData.collegePhone,
+          collegeAddress: formData.collegeAddress,
+          collegeWebsite: formData.collegeWebsite,
+          adminName: formData.adminName,
+          adminEmail: formData.adminEmail,
+          adminPhone: formData.adminPhone,
+          adminRole: formData.adminRole,
+        }
+      );
 
   } catch (err) {
     console.error("Error creating institute/principal:", err);

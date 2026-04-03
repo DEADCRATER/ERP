@@ -47,6 +47,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  
 
   const fetchData = async () => {
     try {
@@ -54,21 +55,22 @@ const Dashboard = () => {
       const userString = localStorage.getItem('user');
       if (!userString) return;
       const user = JSON.parse(userString);
-      const token = user?.accessToken;
-      const headers = { Authorization: `Bearer ${token}` };
+      const id = user?._id;
 
-      const [appRes, deptRes] = await Promise.all([
-        api.get('/student/application', { headers }).catch(() => ({ data: { profile: { isSubmitted: false } } })),
-        // api.get('/student/departments', { headers }).catch(() => ({ data: { data: [] } }))
+      const [appRes] = await Promise.all([
+        api.get(`/student/application/${id}`).catch(() => ({ data: { profile: { isSubmitted: false } } })),
       ]);
 
-      const prof = appRes.data.profile;
+      const prof = appRes.data;
+      console.log('Fetched Profile:', prof);
+      setStep((prof?.profile?.applicationStep ));
+      console.log('Setting step to:', prof?.profile?.applicationStep );
       setFormData(prev => ({
         ...prev,
         aadhar: prof.aadhar
       }));
 
-      if (prof?.isSubmitted || prof?.applicationStatus === 'PENDING') {
+      if (prof?.profile?.studentDetails?.isSubmitted || prof?.profile?.studentDetails?.applicationStatus === 'PENDING') {
        setIsSubmitted(true);
         setApplication(true);
         // Ensure formData is also populated just in case they need to correct later
@@ -151,13 +153,8 @@ const Dashboard = () => {
   const handleNextStep = async () => {
     setSaving(true);
     try {
-      const userString = localStorage.getItem('user');
-      const user = userString ? JSON.parse(userString) : null;
-      const headers = { Authorization: `Bearer ${user?.accessToken}` };
-
       if (step === 1) {
-
-        const res = await api.put('/student/application/step1', formData, { headers });
+        const res = await api.put('/student/application/step1', formData);
         if (res.status === 200) {
           setIsSubmitted(true);
         }
@@ -197,7 +194,7 @@ const Dashboard = () => {
           }
         });
         await api.put('/student/application/step3', step3Data, {
-          headers: { ...headers, 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
 
@@ -215,20 +212,16 @@ const Dashboard = () => {
     if (!window.confirm("Are you sure? No changes can be made after submission.")) return;
     setSaving(true);
     try {
-      const userString = localStorage.getItem('user');
-      const user = userString ? JSON.parse(userString) : null;
-      const headers = { Authorization: `Bearer ${user?.accessToken}` };
-
       // Step 4: Save payment details
       await api.put('/student/application/step4', {
         transactionDate: formData.transactionDate,
         paymentId: formData.paymentId,
         transactionId: formData.transactionId,
         feeAmount: formData.fee
-      }, { headers });
+      });
 
       // Final Submit
-      await api.post('/student/application/submit', {}, { headers });
+      await api.post('/student/application/submit', {});
 
       setIsSubmitted(true);
       setIsCorrecting(false);

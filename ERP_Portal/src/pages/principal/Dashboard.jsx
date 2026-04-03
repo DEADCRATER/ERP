@@ -68,7 +68,7 @@ const CourseCard = ({ course }) => {
 
       {/* Footer */}
       <button
-        onClick={() => navigate(`/principal/view-applications?course=${encodeURIComponent(course.courseName)}`)}
+        onClick={() => navigate(`/principal/view-applications?course=${encodeURIComponent(course.name)}`)}
         className="w-full py-2 bg-gray-900 text-white text-xs font-bold uppercase tracking-wide hover:bg-gray-800 transition-colors active:bg-gray-700"
       >
         View Applications
@@ -86,14 +86,7 @@ const Dashboard = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-      const res = await api.get(
-        `/principal/college/${user?._id}/departments`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.accessToken}`,
-          },
-        }
-      );
+      const res = await api.get(`/principal/college/${user?._id}/departments`);
 
       console.log(res.data.data);
       setDepartments(res.data.data || []);
@@ -106,6 +99,7 @@ const Dashboard = () => {
   }, []);
 
   const filtered = departments.filter((c) =>
+
     c?.name?.toLowerCase().includes(search.toLowerCase())
   );
 

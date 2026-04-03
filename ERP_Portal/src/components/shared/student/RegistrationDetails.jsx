@@ -4,9 +4,10 @@ import { useAuth } from '../../../context/AuthContext';
 
 const RegistrationDetails = ({ student, showSlipOptions, setShowSlipOptions, onViewSlip }) => {
   const { user: currentUser } = useAuth();
-  const {  applicationNumber , enrollmentNumber,Course} = student?.profile || {};
-  const {collegeName,collegeCode ,submissionDate} = student?.college || {};
-  const user = student?.profile?.user || {};
+  const {  applicationNumber , enrollmentNumber ,submissionDate
+} = student?.profile || {};
+  const {collegeName,collegeCode } = student?.college || {};
+  console.log("student:", student?.profile);
   
   
 
@@ -32,8 +33,8 @@ const RegistrationDetails = ({ student, showSlipOptions, setShowSlipOptions, onV
         {[
           ['Acknowledgement Number', applicationNumber || 'Not Generated'],
           ['College Name', collegeName || 'Not Generated'],
-          ['Course Name', Course || 'Not Generated'],
-          ['Date of Submission', submissionDate || 'Not Generated'],
+          ['Course Name', student.profile?.Course?.name || 'Not Generated'],
+          ['Date of Submission', new Date(submissionDate).toLocaleDateString()|| 'Not Generated'],
           ['Date of Admission', student?.admissionDate || 'Not Generated'],
         ].map(([label, value], idx) => (
           <div key={idx} className="col-span-12 grid grid-cols-12 border-b border-gray-100 last:border-0 hover:bg-gray-50/50">

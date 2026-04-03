@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { Toaster } from 'react-hot-toast';
 import MainLayout from './components/layout/MainLayout';
 
 // Common & Auth Pages
@@ -8,7 +9,10 @@ import Home from './pages/common/Home';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import CreatePassword from './pages/auth/CreatePassword';
+import Maintenance from './pages/shared/Maintenance';
+import SuperAdminLogin from './pages/auth/SuperAdminLogin';
 import NotFound from './pages/common/NotFound';
+import MaintenanceGuard from './components/shared/MaintenanceGuard';
 
 // Modular Role Routes
 import StudentRoutes from './routes/StudentRoutes';
@@ -20,28 +24,33 @@ import RegistrationSlip from './pages/principal/RegistrationSlip';
 const App = () => {
   return (
     <AuthProvider>
+      <Toaster position="top-right" reverseOrder={false} />
       <Router>
-        <Routes>
-          {/* Public Route layout free endpoints */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/create-password/:token" element={<CreatePassword />} />
-          <Route path="/register" element={<Register />} />
+        <MaintenanceGuard>
+          <Routes>
+            {/* Public Route layout free endpoints */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/super-admin-login" element={<SuperAdminLogin />} />
+            <Route path="/maintenance" element={<Maintenance />} />
+            <Route path="/create-password/:token" element={<CreatePassword />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* Protected Routes wrapped in MainLayout */}
-          <Route element={<MainLayout />}>
-            <Route path="/student/*" element={<StudentRoutes />} />
-            <Route path="/principal/*" element={<PrincipalRoutes />} />
-            <Route path="/super-admin/*" element={<SuperAdminRoutes />} />
-          </Route>
+            {/* Protected Routes wrapped in MainLayout */}
+            <Route element={<MainLayout />}>
+              <Route path="/student/*" element={<StudentRoutes />} />
+              <Route path="/principal/*" element={<PrincipalRoutes />} />
+              <Route path="/super-admin/*" element={<SuperAdminRoutes />} />
+            </Route>
 
-          {/* Full Screen Pages */}
-          <Route path="/principal/student-details/:id" element={<StudentDetails />} />
-          <Route path="/principal/registration-slip/:id/:type" element={<RegistrationSlip />} />
+            {/* Full Screen Pages */}
+            <Route path="/principal/student-details/:id" element={<StudentDetails />} />
+            <Route path="/principal/registration-slip/:id/:type" element={<RegistrationSlip />} />
 
-          {/* Catch-all 404 Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            {/* Catch-all 404 Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </MaintenanceGuard>
       </Router>
     </AuthProvider>
   );

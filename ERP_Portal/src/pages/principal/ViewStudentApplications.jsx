@@ -26,39 +26,12 @@ const STATUS_STYLES = {
 
 const getStatusStyle = (status) => STATUS_STYLES[status] || 'bg-gray-200 text-gray-700';
 
-// Generate mock student rows for the selected course
-const generateStudents = (courseAbbr) => {
-  const names = [
-    ['PREM KUMAR SINGH', 'RAM KUMAR SINGH', 'BC'],
-    ['MUKESH KUMAR MAHTO', 'RAJ KUMAR MAHTO', 'SC'],
-    ['MANIKANT KUMAR', 'LALAN RAY', 'BC'],
-    ['SRINIVAS KUMAR JHA', 'ARUN JHA', 'GEN'],
-    ['SONU KUMAR JHA', 'VIKASH JHA', 'GEN'],
-    ['SATISH KUMAR CHOUDHARY', 'RAJLAL CHOUDHARY', 'EBC'],
-    ['SACHIN KUMAR YADAV', 'LALIT KUMAR', 'EBC'],
-    ['KARTIK KUMAR', 'JYACHY RAY', 'EBC'],
-    ['HARISH KUMAR', 'RAM KALESH YADAV', 'BC'],
-    ['ROHAN ANAND', 'DASHRATH MAHTO', 'SC'],
-  ];
-
-  return names.map(([name, father, cat], i) => ({
-    ackNo: `2310${String(Math.floor(Math.random() * 9000000) + 1000000)}${String.fromCharCode(65 + (i % 5))}`,
-    course: courseAbbr || 'DMLT',
-    category: cat,
-    name,
-    fatherName: father,
-    mobile: `${6000000000 + i * 12345678}`.slice(0, 10),
-    date: `${String(i + 2).padStart(2, '0')}-${i < 5 ? '02' : '04'}-2025`,
-    status: 'Approved by COE',
-  }));
-};
-
-
 
 const ITEMS_PER_PAGE = 10;
 
 const ViewStudentApplications = () => {
   const [searchParams] = useSearchParams();
+  
   const navigate = useNavigate();
 
   // Pre-populate course from query param (set by dashboard card)
@@ -84,14 +57,8 @@ const ViewStudentApplications = () => {
 
 
   const getStudents = async () => {
-  const token = JSON.parse(localStorage.getItem("user")).accessToken;
-
   try {
-    const res = await api.get(`principal/students`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await api.get(`principal/students${searchParams.get('course') ? `/${searchParams.get('course')}` : ''}`);
     console.log(res.data.data);
     setStudents(res.data.data);
   } catch (error) {
@@ -262,15 +229,15 @@ const ViewStudentApplications = () => {
               {displayed.map((row, i) => (
                 <tr key={row.ackNo} className={`hover:bg-gray-50 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}>
                   <td className="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">{row.applicationNumber}</td>
-                  <td className="px-3 py-2 text-gray-700">{row.Course}</td>
+                  <td className="px-3 py-2 text-gray-700">{row.Course?.name}</td>
                   <td className="px-3 py-2 text-gray-700">{row.category}</td>
                   <td className="px-3 py-2 text-gray-900 whitespace-nowrap">{row.name}</td>
                   <td className="px-3 py-2 text-gray-600 whitespace-nowrap">{row.fatherName}</td>
                   <td className="px-3 py-2 text-gray-600">{row.mobile}</td>
-                  <td className="px-3 py-2 text-gray-600 whitespace-nowrap">{row.dob}</td>
+                  <td className="px-3 py-2 text-gray-600 whitespace-nowrap">{new Date(row.submissionDate).toLocaleDateString()}</td>
                   <td className="px-3 py-2 whitespace-nowrap">
-                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${getStatusStyle(row.status)}`}>
-                      {row.status}
+                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${getStatusStyle(row.academicStatus)}`}>
+                      {row.academicStatus}
                     </span>
                   </td>
                   <td className="px-3 py-2">

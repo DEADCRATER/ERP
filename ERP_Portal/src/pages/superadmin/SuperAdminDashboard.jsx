@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import AddPrincipalModal from '../../components/modals/AddPrincipalModal';
+import MaintenanceToggle from '../../components/super-admin/MaintenanceToggle';
 
 const SuperAdminDashboard = () => {
   const { t } = useTranslation();
@@ -10,6 +11,9 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {/* 🛠 Maintenance Mode Control */}
+      <MaintenanceToggle />
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t('superAdmin.dashboardTitle', 'Super Admin Dashboard')}</h1>

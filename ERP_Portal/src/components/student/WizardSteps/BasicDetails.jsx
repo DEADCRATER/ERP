@@ -5,7 +5,7 @@ const BasicDetails = ({ data, setData, onNext }) => {
   const inputStyle = "mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 sm:text-sm shadow-sm transition";
   const labelStyle = "block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1";
 
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
@@ -69,7 +69,7 @@ const BasicDetails = ({ data, setData, onNext }) => {
           <div>
             <label className={labelStyle}>Category</label>
             <select name="category" required className={inputStyle} value={data.category || ''} onChange={handleChange}>
-              <option value="">Select Category</option>
+              <option value="">ategory</option>
               <option value="GENERAL">GENERAL</option>
               <option value="BC">BC</option>
               <option value="EBC">EBC</option>
@@ -78,8 +78,8 @@ const BasicDetails = ({ data, setData, onNext }) => {
             </select>
           </div>
           <div>
-             <label className={labelStyle}>Aadhar Number</label>
-             <input name="aadhar" type="text" required className={inputStyle} value={data.aadhar || ''} onChange={handleChange} placeholder="Aadhar Number" maxLength={12} />
+            <label className={labelStyle}>Aadhar Number</label>
+            <input name="aadhar" type="text" required className={inputStyle} value={data.aadhar || ''} onChange={handleChange} placeholder="Aadhar Number" maxLength={12} />
           </div>
         </div>
       </div>

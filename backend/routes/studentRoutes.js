@@ -10,14 +10,20 @@ const {
     saveStep2, 
     saveStep3, 
     saveStep4,
-    submitApplication 
+    submitApplication ,
+    printStudentData,
+    getColleges,
+    getCollegesbranch
 } = require('../controllers/studentController');
-
+router.get('/colleges', getColleges);
 router.use(protect);
 router.use(authorizeRoles('STUDENT','PRINCIPAL'));
 
 router.get('/departments', getMyCollegeDepartments);
 router.get('/application/:id', getMyApplication);
+router.get('/studentData/:id',printStudentData)
+router.get('/collegesbranch', getCollegesbranch);
+
 
 router.put('/application/step1', saveStep1);
 

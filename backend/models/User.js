@@ -34,7 +34,10 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'College'
   },
-
+  studentDetails :{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'StudentDetails'
+  },
   isVerified: {
     type: Boolean,
     default: false
