@@ -12,7 +12,7 @@ import principalRoutes from './routes/principalRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 
 // Connect Database
-connectDB();
+await connectDB();
 
 const app = express();
 
