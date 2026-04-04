@@ -17,8 +17,8 @@ const Dashboard = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-  const [application, setApplication] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [application, setApplication] = useState(null);
   const [college, setCollege] = useState(null);
   const [departments, setDepartments] = useState([]);
 
@@ -47,7 +47,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  
+
 
   const fetchData = async () => {
     try {
@@ -57,108 +57,59 @@ const Dashboard = () => {
       const user = JSON.parse(userString);
       const id = user?._id;
 
-      const [appRes] = await Promise.all([
-        api.get(`/student/application/${id}`).catch(() => ({ data: { profile: { isSubmitted: false } } })),
-      ]);
+      const res = await api.get(`/student/application/${id}`);
+      const data = res.data;
+      console.log('Fetched Profile Data:', data);
 
-      const prof = appRes.data;
-      console.log('Fetched Profile:', prof);
-      setStep((prof?.profile?.applicationStep ));
-      console.log('Setting step to:', prof?.profile?.applicationStep );
-      setFormData(prev => ({
-        ...prev,
-        aadhar: prof.aadhar
-      }));
+      if (data) {
+        // Correctly set step from profile nested object or top level
+        const currentStep = data.profile?.applicationStep || data.applicationStep || 1;
+        setStep(currentStep);
+        setApplication(data); // Always set application data if found
 
-      if (prof?.profile?.studentDetails?.isSubmitted || prof?.profile?.studentDetails?.applicationStatus === 'PENDING') {
-       setIsSubmitted(true);
-        setApplication(true);
-        // Ensure formData is also populated just in case they need to correct later
-        if (prof) {
-          setFormData(prev => ({
-            ...prev,
-            ...prof,
-            ...(prof.education || {}), // Flatten education fields for components
-            dob: prof.dob ? prof.dob.split('T')[0] : '',
-            departmentId: prof.departmentId?._id || prof.departmentId || ''
-          }));
-        }
-      } else {
-        setStep(prof?.applicationStep || 1);
-        if (prof) {
-          setFormData(prev => ({
-            ...prev,
-            ...prof,
-            ...(prof.education || {}), // Flatten education fields for components
-            dob: prof.dob ? prof.dob.split('T')[0] : '',
-            departmentId: prof.departmentId?._id || prof.departmentId || ''
-          }));
+        const profileData = data.profile || {};
+
+        setFormData(prev => ({
+          ...prev,
+          ...profileData,
+          ...(profileData.education || {}), // Flatten education fields
+          dob: profileData.dob ? profileData.dob.split('T')[0] : '',
+          departmentId: profileData.departmentId?._id || profileData.departmentId || '',
+          course: profileData.course || ''
+        }));
+
+
+        // Keep track of submission status from backend
+        if (data.profile?.studentDetails?.isSubmitted) {
+          setIsSubmitted(true);
         }
       }
+
     } catch (err) {
-      console.error(err);
-      setError('Failed to fetch data');
+      if (err.response?.status === 404) {
+        // No application found, this is a new student
+        setStep(1);
+        console.log('No existing application found, starting from step 1');
+      } else {
+        console.error('Fetch error:', err);
+        setError('Failed to fetch data. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
+
   };
 
-  const loadDemoData = () => {
-    const demoData = {
-      regNo: 'P2333534010',
-      enrollmentNumber: 'G551A23',
-      name: 'PREM SINGHANIA',
-      fatherName: 'RAM KUMAR SINGH',
-      motherName: 'SANJU KUMARI',
-      dob: '2006-02-22',
-      gender: 'MALE',
-      category: 'BC',
-      domicile: 'Bihar',
-      email: 'premsinghania006@gmail.com',
-      mobile: '8409930618',
-      nationality: 'Indian',
-      aadhar: '758476320337',
-      address: 'VILL-KAMLADARI PO-KAMLADARI PS-JAYNAGAR, MADHUBANI, JAYNAGAR',
-      state: 'BIHAR',
-      district: 'MADHUBANI',
-      pinCode: '847226',
-      country: 'India',
-      tenthBoard: 'BSEB PATNA',
-      tenthYear: '2021',
-      tenthPercentage: '56.6',
-      twelfthBoard: 'BSEB PATNA',
-      twelfthYear: '2023',
-      twelfthMarks: '315',
-      twelfthTotalMarks: '500',
-      twelfthPercentage: '63.00',
-      chemistryMarks: '56',
-      mathBioMarks: '68',
-      physicsMarks: '68',
-      lastCourse: 'INTERMEDIATE',
-      lastSchool: 'H.M.Y.J.K.B.V. COLLEGE KAMLADARI JAYNAGAR MADHUBANI',
-      fee: '2500',
-      transactionDate: '12-02-2026 11:55 am',
-      paymentId: 'cpayment_52300',
-      transactionId: '114205858636',
-      applicationStatus: 'PENDING',
-      isSubmitted: true
-    };
 
-    setFormData(demoData);
-    setApplication(demoData);
-    setIsSubmitted(true);
-    setIsCorrecting(false);
-  };
 
   const handleNextStep = async () => {
     setSaving(true);
     try {
       if (step === 1) {
-        const res = await api.put('/student/application/step1', formData);
-        if (res.status === 200) {
-          setIsSubmitted(true);
-        }
+        // Step 1: Basic Details
+        await api.patch('/student/application/step1', formData);
       } else if (step === 2) {
+        // Step 2: Academic Details & Essential Documents
         const step2Data = new FormData();
 
         const education = {
@@ -173,8 +124,12 @@ const Dashboard = () => {
         };
 
         step2Data.append('education', JSON.stringify(education));
+        
+        // Include Course Selection which is now in Step 2
+        if (formData.departmentId) step2Data.append('departmentId', formData.departmentId);
+        if (formData.course) step2Data.append('course', formData.course);
 
-        // ✅ NEW LOGIC
+        // Append files
         if (files.tenthMarkSheet) {
           step2Data.append('tenthMarkSheet', files.tenthMarkSheet);
         } else if (formData.documents?.tenthMarkSheet) {
@@ -186,14 +141,20 @@ const Dashboard = () => {
         } else if (formData.documents?.twelfthMarkSheet) {
           step2Data.append('existingTwelfthMarkSheet', formData.documents.twelfthMarkSheet);
         }
+
+        await api.patch('/student/application/step2', step2Data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        
       } else if (step === 3) {
+        // Step 3: Media & Other Documents
         const step3Data = new FormData();
         Object.keys(files).forEach(key => {
           if (files[key] && !['tenthMarkSheet', 'twelfthMarkSheet'].includes(key)) {
             step3Data.append(key, files[key]);
           }
         });
-        await api.put('/student/application/step3', step3Data, {
+        await api.patch('/student/application/step3', step3Data, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
@@ -201,44 +162,105 @@ const Dashboard = () => {
       setStep(prev => prev + 1);
       window.scrollTo(0, 0);
     } catch (err) {
-      console.error(err);
+      console.error('Error saving step:', err);
       alert(err.response?.data?.message || 'Error saving progress');
     } finally {
       setSaving(false);
     }
   };
 
-  const finalSubmit = async () => {
-    if (!window.confirm("Are you sure? No changes can be made after submission.")) return;
-    setSaving(true);
-    try {
-      // Step 4: Save payment details
-      await api.put('/student/application/step4', {
-        transactionDate: formData.transactionDate,
-        paymentId: formData.paymentId,
-        transactionId: formData.transactionId,
-        feeAmount: formData.fee
-      });
+// const finalSubmit = async (e) => {
+//   if (e) e.preventDefault();
+//   console.log("finalSubmit");
+//   const confirmSubmit = window.confirm(
+//     "Are you sure? No changes can be made after submission."
+//   );
+//   console.log("after");
+//   if (!confirmSubmit) return;
 
-      // Final Submit
-      await api.post('/student/application/submit', {});
+//   setSaving(true);
+//   console.log("before try");
+//   try {
+//     // Step 4: Finalize payment/step 4
+//     const step4Data = new FormData();
+//     step4Data.append('transactionDate', formData.transactionDate);
+//     step4Data.append('paymentId', formData.paymentId);
+//     step4Data.append('transactionId', formData.transactionId);
+//     step4Data.append('feeAmount', formData.fee);
+//     console.log("before files");
+//     if (files.feesReceipt) {
+//       step4Data.append('feesReceipt', files.feesReceipt);
+//     } else if (formData.documents?.feesReceipt) {
+//       step4Data.append('existingFeesReceipt', formData.documents.feesReceipt);
+//     }
+//     console.log("after files");
 
-      setIsSubmitted(true);
-      setIsCorrecting(false);
-      window.scrollTo(0, 0);
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || 'Error submitting application');
-    } finally {
-      setSaving(false);
+//     await api.patch('/student/application/step4', step4Data, {
+//       headers: { 'Content-Type': 'multipart/form-data' }
+//     });
+//     console.log("after step4");
+
+//     // Final Submit
+//     await api.post('/student/application/submit', {});
+//     console.log("after submit");
+
+//     // 🔥 small delay so UI doesn't instantly switch
+//     setTimeout(() => {
+//       setIsSubmitted(true);
+//       setIsCorrecting(false);
+//       window.scrollTo(0, 0);
+//       fetchData();
+//     }, 3000); // 300ms delay (smooth UX)
+
+//   } catch (err) {
+//     console.error('Final submit error:', err);
+//     alert(err.response?.data?.message || 'Error submitting application');
+//   } finally {
+//     setSaving(false);
+//   }
+// };
+
+const finalSubmit = async () => {
+  setSaving(true);
+  try {
+    const step4Data = new FormData();
+    step4Data.append('transactionDate', formData.transactionDate);
+    step4Data.append('paymentId', formData.paymentId);
+    step4Data.append('transactionId', formData.transactionId);
+    step4Data.append('feeAmount', formData.fee);
+
+    if (files.feesReceipt) {
+      step4Data.append('feesReceipt', files.feesReceipt);
+    } else if (formData.documents?.feesReceipt) {
+      step4Data.append('existingFeesReceipt', formData.documents.feesReceipt);
     }
-  };
+
+    await api.patch('/student/application/step4', step4Data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
+    await api.post('/student/application/submit', {});
+
+    setIsSubmitted(true);
+    setIsCorrecting(false);
+    window.scrollTo(0, 0);
+    fetchData();
+
+  } catch (err) {
+    console.error(err);
+    alert(err.response?.data?.message || 'Error submitting');
+  } finally {
+    setSaving(false);
+    setConfirmOpen(false);
+  }
+};
 
   if (loading) return <div className="p-8 text-center text-gray-500 font-medium">Loading Application Data...</div>;
 
   // New Redesigned Status View 
-  if (isSubmitted &&  application) {
+  if ((isSubmitted || step >= 5) && application && !isCorrecting) {
+
+
     return (
       <StudentStatusView
         student={{ ...formData, ...application }}
@@ -250,18 +272,41 @@ const Dashboard = () => {
       />
     );
   }
+
+
   // Active Wizard Mode
   return (
     <div className="max-w-5xl mx-auto py-12 px-4 sm:px-6">
+      {confirmOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-lg font-bold mb-2">Confirm</h2>
+            <p className="text-sm mb-4">
+              Are you sure? No changes can be made after submission.
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setConfirmOpen(false)} disabled={saving} className="px-4 py-2 text-gray-600 hover:text-black">
+                Cancel
+              </button>
+
+              <button
+                onClick={finalSubmit}
+                disabled={saving}
+                className="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-700"
+              >
+                {saving ? "Processing..." : "Yes, Submit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
           <h1 className="text-3xl font-black text-gray-900 tracking-tight">Student Registration Portal</h1>
           <p className="text-gray-500 font-medium mt-1">Complete your profile to generate enrollment details.</p>
         </div>
-        <button onClick={loadDemoData} className="group flex items-center gap-2 bg-gray-50 border border-gray-200 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-600 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-all shadow-sm">
-          <svg className="w-4 h-4 text-blue-500 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-          Load Demo Data (For Testing)
-        </button>
+
       </div>
 
       {/* Step Progress Indicator */}
@@ -277,7 +322,7 @@ const Dashboard = () => {
         ].map((s) => (
           <div key={s.id} className="flex flex-col items-center gap-2">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-4 transition-all duration-300 ${step === s.id ? 'bg-blue-600 text-white border-blue-100 scale-110 shadow-lg' :
-                step > s.id ? 'bg-green-500 text-white border-green-50' : 'bg-white text-gray-400 border-gray-50'
+              step > s.id ? 'bg-green-500 text-white border-green-50' : 'bg-white text-gray-400 border-gray-50'
               }`}>
               {step > s.id ? '✓' : s.id}
             </div>
@@ -289,10 +334,11 @@ const Dashboard = () => {
       </div>
 
       <div className="max-w-4xl mx-auto">
-        {step === 1 && <BasicDetails data={formData} setData={setFormData} onNext={handleNextStep} />}
+        {step === 1 && <BasicDetails data={formData} setData={setFormData} onNext={handleNextStep} savedProfile={application?.profile} />}
+
         {step === 2 && <AcademicDetails data={formData} setData={setFormData} onNext={handleNextStep} onBack={() => setStep(1)} />}
         {step === 3 && <DocumentUploads data={formData} files={files} setFiles={setFiles} onNext={handleNextStep} onBack={() => setStep(2)} />}
-        {step === 4 && <FeesPayment data={formData} setData={setFormData} onFinalSubmit={finalSubmit} onBack={() => setStep(3)} saving={saving} />}
+        {step === 4 && <FeesPayment data={formData} setData={setFormData} files={files} setFiles={setFiles} onFinalSubmit={(e) => { e.preventDefault(); setConfirmOpen(true); }} onBack={() => setStep(3)} saving={saving} />}
       </div>
 
       {/* <footer className="mt-20 text-center border-t pt-8">

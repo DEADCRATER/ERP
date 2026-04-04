@@ -8,12 +8,8 @@ const StudentStatusView = ({ student, onUpdateNow, onDownload }) => {
     applicationStatus,
    name ,
     enrollmentNumber,
-
     isSubmitted,
-  } = student.profile.studentDetails || {};
-
-  // dummy data 
-  const dummyData = { applicationStatus: "APPROVED" ,name:"Bhavesh",enrollmentNumber:"123456789",applicationNumber:"123456789",isSubmitted:true}
+  } = student.profile || student || {};
   
   const primaryColor = "bg-[#6A4B9F]"; 
   const secondaryColor = "bg-[#F3E8FF]"; 

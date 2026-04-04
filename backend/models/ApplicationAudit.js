@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const applicationAuditSchema = new mongoose.Schema({
   studentId: {
@@ -26,4 +26,5 @@ const applicationAuditSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('ApplicationAudit', applicationAuditSchema);
+const ApplicationAudit = mongoose.model('ApplicationAudit', applicationAuditSchema);
+export default ApplicationAudit;

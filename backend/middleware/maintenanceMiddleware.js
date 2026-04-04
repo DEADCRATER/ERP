@@ -1,7 +1,7 @@
-const asyncHandler = require('express-async-handler');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const SystemConfig = require('../models/SystemConfig');
+import asyncHandler from 'express-async-handler';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import SystemConfig from '../models/SystemConfig.js';
 
 /**
  * @desc    Middleware to check if the system is in maintenance mode
@@ -48,4 +48,4 @@ const checkMaintenanceMode = asyncHandler(async (req, res, next) => {
   next();
 });
 
-module.exports = { checkMaintenanceMode };
+export { checkMaintenanceMode };

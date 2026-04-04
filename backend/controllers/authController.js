@@ -1,11 +1,14 @@
-const asyncHandler = require('express-async-handler');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const StudentDetails = require('../models/StudentDetails');
-const Principal = require('../models/College');
-const SuperAdmin = require('../models/SuperAdmin');
-const generateTokens = require('../utils/generateToken');
+import asyncHandler from 'express-async-handler';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import User from '../models/User.js';
+import StudentDetails from '../models/StudentDetails.js';
+import College from '../models/College.js';
+const Principal = College;
+import SuperAdmin from '../models/SuperAdmin.js';
+import generateTokens from '../utils/generateToken.js';
+import sendEmail from '../utils/sendEmail.js';
 
 // @route POST /api/auth/register
 const register = asyncHandler(async (req, res) => {
@@ -28,12 +31,7 @@ const register = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    if (role === 'STUDENT') {
-      await StudentDetails.create({ user: user._id });
-    } else if (role === 'PRINCIPAL') {
-      await Principal.create({ user: user._id });
-    }
-    else if (role === 'SUPER_ADMIN') {
+    if (role === 'SUPER_ADMIN') {
       await SuperAdmin.create({ user: user._id });
     }
 
@@ -139,7 +137,7 @@ const createPassword = asyncHandler(async (req, res) => {
     throw new Error('Please provide token and password');
   }
 
-  const hashedToken = require('crypto').createHash('sha256').update(token).digest('hex');
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await User.findOne({
     resetToken: hashedToken,
@@ -169,7 +167,6 @@ const studentRegisterStep1 = asyncHandler(async (req, res) => {
     throw new Error('Please provide all required fields');
   }
 
-  const College = require('../models/College');
   const college = await College.findOne({ collegeCode: collegeCode.toUpperCase() });
   
   if (!college) {
@@ -184,7 +181,7 @@ const studentRegisterStep1 = asyncHandler(async (req, res) => {
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const hashedOTP = require('crypto').createHash('sha256').update(otp).digest('hex');
+  const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
   console.log(otp)
   if (user) {
      user.name = name;
@@ -206,7 +203,7 @@ const studentRegisterStep1 = asyncHandler(async (req, res) => {
      });
   }
 
-  const sendEmail = require('../utils/sendEmail');
+
   const message = `Hello ${name},\n\nYour OTP for student registration is: ${otp}\nIt is valid for 10 minutes.`;
   
   // await sendEmail({
@@ -227,7 +224,7 @@ const studentVerifyOTP = asyncHandler(async (req, res) => {
     throw new Error('Email and OTP are required');
   }
 
-  const hashedOTP = require('crypto').createHash('sha256').update(otp).digest('hex');
+  const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
 
   const user = await User.findOne({
     email,
@@ -252,7 +249,7 @@ const studentSetupPassword = asyncHandler(async (req, res) => {
     throw new Error('Please provide email, otp, and password');
   }
 
-  const hashedOTP = require('crypto').createHash('sha256').update(otp).digest('hex');
+  const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
 
   const user = await User.findOne({
     email,
@@ -272,9 +269,7 @@ const studentSetupPassword = asyncHandler(async (req, res) => {
   user.resetTokenExpiry = undefined;
   await user.save();
 
-  const StudentDetails = require('../models/StudentDetails');
-  const College = require('../models/College');
-  
+
   const college = await College.findById(user.collegeId);
   const applicationNumber = Math.floor(100000000000 + Math.random() * 900000000000).toString();
 
@@ -284,7 +279,7 @@ const studentSetupPassword = asyncHandler(async (req, res) => {
     contactPhone: user.phone
   });
 
-  const sendEmail = require('../utils/sendEmail');
+
   const message = `Congratulations ${user.name}!\n\nYour registration is successful.\n\nCollege Name: ${college?.collegeName || 'N/A'}\nCollege Code: ${college?.collegeCode || 'N/A'}\nApplication Number: ${applicationNumber}\n\nYou can now log in to the ERP portal.`;
   
   // await sendEmail({
@@ -296,4 +291,4 @@ const studentSetupPassword = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Password setup and registration complete' });
 });
 
-module.exports = { register, login, refresh, logout, createPassword, studentRegisterStep1, studentVerifyOTP, studentSetupPassword };
+export { register, login, refresh, logout, createPassword, studentRegisterStep1, studentVerifyOTP, studentSetupPassword };

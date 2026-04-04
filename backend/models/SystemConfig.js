@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const systemConfigSchema = new mongoose.Schema({
   configName: {
@@ -24,4 +24,5 @@ const systemConfigSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('SystemConfig', systemConfigSchema);
+const SystemConfig = mongoose.model('SystemConfig', systemConfigSchema);
+export default SystemConfig;

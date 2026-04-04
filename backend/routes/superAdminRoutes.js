@@ -1,14 +1,14 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
-const { authorizeRoles } = require('../middleware/roleMiddleware');
-const { 
+import { protect } from '../middleware/authMiddleware.js';
+import { authorizeRoles } from '../middleware/roleMiddleware.js';
+import { 
   getPrincipals, 
   getStudents, 
   createPrincipal,
   getMaintenanceStatus,
   toggleMaintenanceMode
-} = require('../controllers/superAdminController');
+} from '../controllers/superAdminController.js';
 
 // 🛠 Public Maintenance Status Check
 router.get('/maintenance', getMaintenanceStatus);
@@ -23,4 +23,4 @@ router.get('/students', getStudents);
 // 🛠 Protected Maintenance Update
 router.patch('/maintenance', toggleMaintenanceMode);
 
-module.exports = router;
+export default router;

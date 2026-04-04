@@ -139,7 +139,12 @@ const Dashboard = () => {
 
         <div className="flex items-center gap-2">
           {/* View All button */}
-          <button className="px-4 py-2 rounded-md bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800 transition-colors">
+          <button 
+            onClick={() => {
+              navigate('/principal/view-applications?course=All selected');
+            }}
+            className="px-4 py-2 rounded-md bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800 transition-colors"
+          >
             View All Application
           </button>
           {/* Grid/List toggles */}

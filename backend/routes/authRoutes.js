@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { register, login, refresh, logout, createPassword, studentRegisterStep1, studentVerifyOTP, studentSetupPassword } = require('../controllers/authController');
-const { protect } = require('../middleware/authMiddleware');
+import { register, login, refresh, logout, createPassword, studentRegisterStep1, studentVerifyOTP, studentSetupPassword } from '../controllers/authController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 router.post('/register', register);
 router.post('/login', login);
@@ -13,4 +13,4 @@ router.post('/student/register-step1', studentRegisterStep1);
 router.post('/student/verify-otp', studentVerifyOTP);
 router.post('/student/setup-password', studentSetupPassword);
 
-module.exports = router;
+export default router;

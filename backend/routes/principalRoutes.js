@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
-const { authorizeRoles } = require('../middleware/roleMiddleware');
-const { getAllStudents, reviewStudentApplication, updateStudentData, getStudentHistory, createBranch, printStudentData, getDepartmentsAndBranches, getCollegeStats, getDepartments, createDepartment } = require('../controllers/principalController');
+import { protect } from '../middleware/authMiddleware.js';
+import { authorizeRoles } from '../middleware/roleMiddleware.js';
+import { getAllStudents, reviewStudentApplication, updateStudentData, getStudentHistory, createBranch, printStudentData, getDepartmentsAndBranches, getCollegeStats, getDepartments, createDepartment } from '../controllers/principalController.js';
 
 router.use(protect);
 router.use(authorizeRoles('PRINCIPAL', 'SUPER_ADMIN'));
@@ -20,7 +20,4 @@ router.get('/college/:collegeId/departments', getDepartments);
 router.post('/departments', createDepartment);
 router.post('/branches', createBranch);
 
-module.exports = router;
-
-
-
+export default router;

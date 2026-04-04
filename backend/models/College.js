@@ -1,6 +1,6 @@
 // models/College.js
 
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const collegeSchema = new mongoose.Schema(
   {
@@ -45,4 +45,5 @@ const collegeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("College", collegeSchema);
+const College = mongoose.model("College", collegeSchema);
+export default College;

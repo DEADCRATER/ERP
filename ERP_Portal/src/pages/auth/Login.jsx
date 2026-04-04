@@ -39,7 +39,7 @@ const Login = () => {
   } else if (role === 'PRINCIPAL') {
     testEmail = 'bhavesh@erp.com';
   } else if (role === 'STUDENT') {
-    testEmail = 'studentverified@erp.com';
+    testEmail = 'test2@gmail.com';
   }
 
   setEmail(testEmail);

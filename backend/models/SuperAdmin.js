@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const principalSchema = new mongoose.Schema({
   user: {
@@ -14,4 +14,5 @@ const principalSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('SuperAdmin', principalSchema);
+const SuperAdmin = mongoose.model('SuperAdmin', principalSchema);
+export default SuperAdmin;

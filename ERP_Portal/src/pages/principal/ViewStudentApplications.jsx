@@ -57,14 +57,17 @@ const ViewStudentApplications = () => {
 
 
   const getStudents = async () => {
-  try {
-    const res = await api.get(`principal/students${searchParams.get('course') ? `/${searchParams.get('course')}` : ''}`);
-    console.log(res.data.data);
-    setStudents(res.data.data);
-  } catch (error) {
-    console.log(error);
+    try {
+      const endpoint = (course && course !== 'All selected') 
+        ? `principal/students/${encodeURIComponent(course)}` 
+        : `principal/students`;
+      const res = await api.get(endpoint);
+      console.log(res.data.data);
+      setStudents(res.data.data || []);
+    } catch (error) {
+      console.log(error);
+    }
   }
-}
 
   const handleReset = () => {
     setCourse('All selected');
@@ -81,7 +84,7 @@ const ViewStudentApplications = () => {
 
   useEffect(() => {
     getStudents();
-  }, []);
+  }, [course]);
 
   return (
     <div className="space-y-4 max-w-full">

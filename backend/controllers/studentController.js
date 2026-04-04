@@ -1,8 +1,8 @@
-const asyncHandler = require('express-async-handler');
-const StudentDetails = require('../models/StudentDetails');
-const College = require('../models/College');
-const User = require('../models/User');
-const Department = require('../models/Department');
+import asyncHandler from 'express-async-handler';
+import StudentDetails from '../models/StudentDetails.js';
+import College from '../models/College.js';
+import User from '../models/User.js';
+import Department from '../models/Department.js';
 
 const getMyApplication = asyncHandler(async (req, res) => {
   const applicationId = req.params.id;
@@ -56,7 +56,6 @@ const printStudentData = asyncHandler(async (req, res) => {
   
 
 const getMyCollegeDepartments = asyncHandler(async (req, res) => {
-  const Department = require('../models/Department');
   const departments = await Department.find({ collegeId: req.user.collegeId });
   res.status(200).json({ data: departments });
 });
@@ -95,10 +94,15 @@ const saveStep2 = asyncHandler(async (req, res) => {
 
   const educationData = typeof req.body.education === 'string' ? JSON.parse(req.body.education) : req.body.education || {};
   
+  // if (req.body.departmentId) profile.departmentId = req.body.departmentId;
+  if (req.body.departmentId) profile.Course = req.body.departmentId;
+  console.log(profile.Course);
+
   profile.education = {
     ...profile.education,
     ...educationData
   };
+
 
   if (req.files) {
     const docFields = ['tenthMarkSheet', 'twelfthMarkSheet'];
@@ -157,6 +161,11 @@ const saveStep4 = asyncHandler(async (req, res) => {
   if (transactionId) profile.transactionId = transactionId;
   if (feeAmount) profile.feeAmount = feeAmount;
 
+  if (req.files && req.files.feesReceipt && req.files.feesReceipt[0]) {
+    profile.documents = profile.documents || {};
+    profile.documents.feesReceipt = `/uploads/${req.files.feesReceipt[0].filename}`;
+  }
+
   profile.applicationStep = 5;
   await profile.save();
   res.json({ message: 'Step 4 saved', data: profile });
@@ -182,7 +191,7 @@ const getCollegesbranch = asyncHandler(async (req, res) => {
   res.json({ data: branches });
 });
 
-module.exports = { 
+export { 
   getMyApplication, 
   getMyCollegeDepartments, 
   saveStep1, 

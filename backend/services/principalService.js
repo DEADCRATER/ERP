@@ -1,7 +1,7 @@
-const StudentDetails = require('../models/StudentDetails');
-const User = require('../models/User');
-const ApplicationAudit = require('../models/ApplicationAudit');
-const sendEmail = require('../utils/sendEmail');
+import StudentDetails from '../models/StudentDetails.js';
+import User from '../models/User.js';
+import ApplicationAudit from '../models/ApplicationAudit.js';
+import sendEmail from '../utils/sendEmail.js';
 
 /**
  * Update student application data by Principal
@@ -117,7 +117,7 @@ const processReview = async (studentId, status, message, performedBy) => {
   return student;
 };
 
-module.exports = {
+export {
   updateStudentData,
   processReview
 };

@@ -1,6 +1,6 @@
 // models/Department.js
 
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const departmentSchema = new mongoose.Schema(
   {
@@ -14,7 +14,10 @@ const departmentSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
+    totalAdmitted: {
+      type: Number,
+      default: 0,
+    },
     collegeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "College",
@@ -27,4 +30,5 @@ const departmentSchema = new mongoose.Schema(
 // 🔥 Prevent duplicate department in same college
 departmentSchema.index({ name: 1, collegeId: 1 }, { unique: true });
 
-module.exports = mongoose.model("Department", departmentSchema);
+const Department = mongoose.model("Department", departmentSchema);
+export default Department;

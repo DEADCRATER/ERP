@@ -1,10 +1,10 @@
-const asyncHandler = require('express-async-handler');
-const crypto = require('crypto');
-const User = require('../models/User');
-const College = require('../models/College');
-const Department = require("../models/Department");
-const SystemConfig = require('../models/SystemConfig');
-const sendEmail = require('../utils/sendEmail');
+import asyncHandler from 'express-async-handler';
+import crypto from 'crypto';
+import User from '../models/User.js';
+import College from '../models/College.js';
+import Department from "../models/Department.js";
+import SystemConfig from '../models/SystemConfig.js';
+import sendEmail from '../utils/sendEmail.js';
 
 const getPrincipals = asyncHandler(async (req, res) => {
   const principals = await College.find().select('collegeName collegeCode collegeEmail isActive');
@@ -138,7 +138,7 @@ const toggleMaintenanceMode = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { 
+export { 
   getPrincipals, 
   getStudents, 
   createPrincipal,

@@ -1,6 +1,6 @@
 import React from "react";
 
-const FeesPayment = ({ data, setData, onFinalSubmit, onBack, saving }) => {
+const FeesPayment = ({ data, setData, files, setFiles, onFinalSubmit, onBack, saving }) => {
   const inputStyle =
     "mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 sm:text-sm shadow-sm transition";
   const labelStyle =
@@ -12,7 +12,7 @@ const FeesPayment = ({ data, setData, onFinalSubmit, onBack, saving }) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <form onSubmit={onFinalSubmit} className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm overflow-hidden relative">
         {/* <div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-lg animate-pulse">
            Live Payment Gateway
@@ -86,10 +86,10 @@ const FeesPayment = ({ data, setData, onFinalSubmit, onBack, saving }) => {
             <input
               type="file"
               name="feesReceipt"
-              required
+              required={!data.documents?.feesReceipt && !files?.feesReceipt}
               accept="image/*,application/pdf"
               className={inputStyle}
-              onChange={handleChange}
+              onChange={(e) => setFiles({ ...files, feesReceipt: e.target.files[0] })}
             />
           </div>
         </div>
@@ -126,14 +126,14 @@ const FeesPayment = ({ data, setData, onFinalSubmit, onBack, saving }) => {
           &larr; Back
         </button>
         <button
-          onClick={onFinalSubmit}
+          type="submit"
           disabled={saving}
           className="bg-red-600 text-white px-10 py-3 rounded-lg font-black uppercase tracking-wider hover:bg-red-700 transition shadow-lg shadow-red-200"
         >
           {saving ? "Processing..." : "CONFIRM & FINAL SUBMIT"}
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 

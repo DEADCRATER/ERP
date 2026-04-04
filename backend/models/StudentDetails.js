@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const studentDetailsSchema = new mongoose.Schema({
   user: {
@@ -70,6 +70,7 @@ const studentDetailsSchema = new mongoose.Schema({
     idProof: { type: String },
     rankCard: { type: String },
     casteCertificate: { type: String },
+    feesReceipt: { type: String },
   },
   media: {
     photo: { type: String },
@@ -106,9 +107,9 @@ const studentDetailsSchema = new mongoose.Schema({
   },
   reviewMessage: { type: String },
   contactPhone: { type: String },
-  address: { type: String }
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('StudentDetails', studentDetailsSchema);
+const StudentDetails = mongoose.model('StudentDetails', studentDetailsSchema);
+export default StudentDetails;

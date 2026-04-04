@@ -47,7 +47,15 @@ const StudentDetails = () => {
       setFormData(response.data);
 
       // 2. Fetch all students to determine "Next" in queue
-      const allStudentsRes = await api.get('/principal/students');
+      // Determine the course/department name from the fetched student data
+      const courseName = response.data?.data?.Course?.name || response.data?.profile?.Course?.name;
+      let allStudentsRes;
+      try {
+        allStudentsRes = await api.get(courseName ? `/principal/students/${encodeURIComponent(courseName)}` : '/principal/students');
+      } catch (err) {
+        allStudentsRes = { data: { data: [] } };
+      }
+      
       const students = allStudentsRes.data.data;
       const currentIndex = students.findIndex(s => s._id === id);
       
