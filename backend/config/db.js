@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 
 const MongoUrl = "mongodb+srv://bhavesh:bhavesh2026@erp.azkiqe1.mongodb.net/ERP?retryWrites=true&w=majority";
@@ -16,8 +16,9 @@ const connectDB = async () => {
 
     if (!existingAdmin) {
       // Hash password
-      const hashedPassword = await crypto.createHash('sha256').update(password).digest('hex');
 
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
       const superAdmin = new User({
         name: 'Super Admin',
         email,
