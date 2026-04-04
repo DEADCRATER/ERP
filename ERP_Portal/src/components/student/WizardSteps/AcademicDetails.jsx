@@ -80,9 +80,9 @@ const AcademicDetails = ({ data, setData, onNext, onBack }) => {
           <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
           10th Standard Qualification
         </h3>
-        <Button variant="outline" size="sm" className="mb-4" onClick={handleFillData}>
+        {/* <Button variant="outline" size="sm" className="mb-4" onClick={handleFillData}>
           <span className="text-xs">Fill Data</span>
-        </Button>
+        </Button> */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
             <label className={labelStyle}>Board Name</label>

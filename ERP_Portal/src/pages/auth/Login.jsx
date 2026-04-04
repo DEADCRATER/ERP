@@ -117,7 +117,7 @@ const Login = () => {
           </form>
 
           {/* Test Credentials Section */}
-          <div className="mt-6 border-t border-gray-200 pt-6">
+          {/* <div className="mt-6 border-t border-gray-200 pt-6">
             <button 
               onClick={handleTestCredentials}
               type="button" 
@@ -125,7 +125,7 @@ const Login = () => {
             >
               Use Test Credentials (Auto Login)
             </button>
-          </div>
+          </div> */}
 
           <div className="mt-6 text-center text-sm text-gray-600">
             {t('noAccount', "Don't have an account?")}{' '}

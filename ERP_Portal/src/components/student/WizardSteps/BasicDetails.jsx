@@ -35,9 +35,9 @@ const BasicDetails = ({ data, setData, onNext, savedProfile }) => {
           <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
           Personal Information
         </h3>
-        <Button variant="outline" size="sm" className="mb-4" onClick={handleFillData}>
+        {/* <Button variant="outline" size="sm" className="mb-4" onClick={handleFillData}>
           <span className="text-xs">Fill Data</span>
-        </Button>
+        </Button> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className={labelStyle}>Full Name</label>
