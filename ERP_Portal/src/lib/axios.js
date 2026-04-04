@@ -1,5 +1,5 @@
 import axios from 'axios';
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://10.137.170.129:8000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://erp-wdlf-git-main-deadcraters-projects.vercel.app/api';
 console.log(BASE_URL);
 
 const api = axios.create({
