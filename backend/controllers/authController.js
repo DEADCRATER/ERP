@@ -205,11 +205,11 @@ const studentRegisterStep1 = asyncHandler(async (req, res) => {
 
   const message = `Hello ${name},\n\nYour OTP for student registration is: ${otp}\nIt is valid for 10 minutes.`;
   
-  await sendEmail({
-    email,
-    subject: 'Student Registration OTP',
-    message
-  });
+  // await sendEmail({
+  //   email,
+  //   subject: 'Student Registration OTP',
+  //   message
+  // });
 
   res.status(200).json({ message: 'OTP sent to email successfully' ,  otp });
 });
@@ -281,11 +281,11 @@ const studentSetupPassword = asyncHandler(async (req, res) => {
 
   const message = `Congratulations ${user.name}!\n\nYour registration is successful.\n\nCollege Name: ${college?.collegeName || 'N/A'}\nCollege Code: ${college?.collegeCode || 'N/A'}\nApplication Number: ${applicationNumber}\n\nYou can now log in to the ERP portal.`;
   
-  await sendEmail({
-    email: user.email,
-    subject: 'Registration Successful - Application Details',
-    message
-  });
+  // await sendEmail({
+  //   email: user.email,
+  //   subject: 'Registration Successful - Application Details',
+  //   message
+  // });
 
   res.status(200).json({ message: 'Password setup and registration complete' });
 });

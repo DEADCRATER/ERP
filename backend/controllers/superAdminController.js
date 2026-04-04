@@ -74,11 +74,11 @@ const createPrincipal = asyncHandler(async (req, res) => {
   const message = `You have been added as a Principal in the ERP System.\n\nPlease click the link below to set up your password and access your account:\n\n${customResetUrl}\n\nIf you did not request this, please ignore this email.`;
 
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Welcome to ERP System - Create your password',
-      message
-    });
+    // await sendEmail({
+    //   email: user.email,
+    //   subject: 'Welcome to ERP System - Create your password',
+    //   message
+    // });
   } catch (err) {
     console.error('Email sending failed:', err);
     user.resetToken = undefined;
