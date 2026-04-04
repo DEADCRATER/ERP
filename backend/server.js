@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/uploads', express.static('uploads'));
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGIN || 'https://hilarious-frangollo-bb4d6d.netlify.app/',
+  origin: process.env.ALLOWED_ORIGIN || 'https://hilarious-frangollo-bb4d6d.netlify.app',
   credentials: true
 }));
 
