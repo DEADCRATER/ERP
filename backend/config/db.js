@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 
-const MongoUrl = "mongodb+srv://bhavesh:bhavesh2026@erp.azkiqe1.mongodb.net/ERP?retryWrites=true&w=majority";
+const MongoUrl = process.env.mongodburi;
 
 const email = 'superadmin@erp.com';
 const password = '123456';
